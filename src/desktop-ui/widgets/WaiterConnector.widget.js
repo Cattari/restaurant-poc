@@ -7,7 +7,7 @@ import { CopyToClipboardButton } from '../components';
 
 const QR_CODE_CANVAS_ID = 'waiter-qr-code-connect-canvas'
 
-export const WaiterConnector = () => {
+export const WaiterConnectorWidget = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const serverAddress = useServerAddress()
   const showModal = () => {

@@ -1,6 +1,6 @@
 const { networkInterfaces } = require('os');
 
-const getNetWorkInterfaces = () => {
+export const getNetWorkInterfaces = () => {
   const nets = networkInterfaces();
   const results = Object.create(null); // Or just '{}', an empty object
 
@@ -19,13 +19,8 @@ const getNetWorkInterfaces = () => {
   return results
 }
 
-const getLocalIpAddress = () => {
+export const getLocalIpAddress = () => {
   const interfaces = getNetWorkInterfaces()
 
   return interfaces['en1'][0]
-}
-
-module.exports = {
-  getNetWorkInterfaces,
-  getLocalIpAddress,
 }

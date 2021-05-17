@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+import { app, BrowserWindow } from 'electron'
+import { initDb } from './models/initDb'
+import { initRestaurantTablesData, initOrdersData } from './models'
 
 require('./server')
 require('./main-renderer-transport')
@@ -17,14 +18,22 @@ const createWindow = () => {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  initDb(async () => {
+    await Promise.all([
+      initRestaurantTablesData(),
+      initOrdersData(),
+    ])
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+    // and load the index.html of the app.
+    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  })
 };
 
 // This method will be called when Electron has finished

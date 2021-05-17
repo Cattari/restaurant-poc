@@ -6,3 +6,21 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.mr-16 {
+  margin-right: 16px;
+}
+
+.w-50 {
+  width: 50%
+}
+
+.order-list-item {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
