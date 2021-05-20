@@ -1,16 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { NewOrderForm, OrderListItem } from '../components';
+import { NewOrderModal, OrderListItem } from '../components';
 import { MESSAGES } from '../../constants';
 import { useTransportDataRequest } from '../hooks';
-import { Button } from 'antd';
+import { Button, Divider, List } from 'antd';
 
-export const OrdersWidget = () => {
-  const [tables] = useTransportDataRequest({
-    dataRequest: MESSAGES.GET_TABLES, 
-    dataReply: MESSAGES.GET_TABLES_REPLY,
-  })
-  const [data, isLoading, fetchOrders, deleteOrder, addOrder] = useTransportDataRequest({
+export const OrdersWidget = ({ tables }) => {
+  const [isNewOrderModalVisible, setNewOrderModalVisible] = useState()
+  const closeModal = () => setNewOrderModalVisible(false)
+  const openModal = () => setNewOrderModalVisible(true)
+  const [data, , fetchOrders, deleteOrder, addOrder] = useTransportDataRequest({
     dataRequest: MESSAGES.GET_ORDERS, 
     dataReply: MESSAGES.GET_ORDERS_REPLY,
     deleteRequest: MESSAGES.DELETE_ORDER,
@@ -26,13 +25,28 @@ export const OrdersWidget = () => {
 
   return (
     <div>
-      <h2>Add new order</h2>
-      <NewOrderForm tables={tables} onSubmit={onAddOrder}/>
-      <h2>Orders</h2>
-      <Button type="button" onClick={fetchOrders}>Reload orders</Button>
-      {data.map((data) => (
-        <OrderListItem key={data.id} {...data} onDelete={deleteOrder} />
-      ))}
+      <Divider orientation="left">
+        Orders
+        {' '}
+        <Button type="button" onClick={fetchOrders}>Reload orders</Button>
+        {' '}
+        <Button type="button" onClick={openModal}>+ Add new order</Button>
+      </Divider>
+      <List
+        bordered
+        dataSource={data}
+        renderItem={item => (
+          <List.Item>
+            <OrderListItem key={item.id} {...item} onDelete={deleteOrder} />
+          </List.Item>
+        )}
+      />
+      <NewOrderModal
+        tables={tables} 
+        onSubmit={onAddOrder}
+        visible={isNewOrderModalVisible}
+        onClose={closeModal}
+      />
     </div>
   )
 }

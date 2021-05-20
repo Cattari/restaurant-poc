@@ -1,45 +1,34 @@
 import React, { useState } from 'react'
-import { Button, Col, Modal, Row } from 'antd';
-import QRCode from 'qrcode'
+import { Button, Divider, List } from 'antd';
 
-import { useServerAddress } from '../hooks';
-import { CopyToClipboardButton, TableListItem } from '../components';
-import { MESSAGES } from '../../constants';
-import { useTransportDataRequest } from '../hooks';
+import { NewTableModal, TableListItem } from '../components';
 
-export const TablesWidget = () => {
-  const [data, isLoading, fetchData, deleteTable, addTable] = useTransportDataRequest({
-    dataRequest: MESSAGES.GET_TABLES, 
-    dataReply: MESSAGES.GET_TABLES_REPLY,
-    deleteRequest: MESSAGES.DELETE_TABLE,
-    deleteReply: MESSAGES.DELETE_TABLE_REPLY,
-    addRequest: MESSAGES.ADD_TABLE,
-    addReply: MESSAGES.ADD_TABLE_REPLY,
-  })
-  const [newTableName, setNewTableName] = useState('')
-  const onAddTable = () => {
-    addTable({ name: newTableName })
-    setNewTableName('')
-  }
+export const TablesWidget = ({ data, deleteTable, addTable }) => {
+  const [isNewTableModalVisible, setNewTableModalVisible] = useState()
+  const closeModal = () => setNewTableModalVisible(false)
+  const openModal = () => setNewTableModalVisible(true)
 
   return (
     <div>
-      <h2>Add new table</h2>
-      <Row>
-        <Col span={12}> 
-          <input 
-            value={newTableName} 
-            onChange={(event) => setNewTableName(event.target.value)} 
-          />
-        </Col>
-        <Col span={12}> 
-          <Button type="button" onClick={onAddTable}>Add table</Button>
-        </Col>
-      </Row>
-      <h2>Tables</h2>
-      {data.map(({ id, name }) => (
-        <TableListItem key={id} id={id} name={name} onDelete={deleteTable} />
-      ))}
+      <Divider orientation="left">
+        Tables
+        {' '}
+        <Button type="button" onClick={openModal}>+ Add new table</Button>
+      </Divider>
+      <List
+        bordered
+        dataSource={data}
+        renderItem={item => (
+          <List.Item>
+            <TableListItem key={item.id} id={item.id} name={item.name} onDelete={deleteTable} />
+          </List.Item>
+        )}
+      />
+      <NewTableModal
+        visible={isNewTableModalVisible}
+        onClose={closeModal}
+        onSubmit={addTable} 
+      />
     </div>
   )
 }

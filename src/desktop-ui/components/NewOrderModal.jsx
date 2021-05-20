@@ -1,28 +1,46 @@
 import React, { useState } from 'react'
-import { Button, Select, Row, Col } from 'antd'
+import { Button, Select, Row, Col, Modal } from 'antd'
 
-export const NewOrderForm = ({ tables, onSubmit }) => {
+export const NewOrderModal = ({ visible, onClose, tables, onSubmit }) => {
   const [newOrderContent, setNewOrderContent] = useState('')
   const [selectedTableId, setSelectedTableId] = useState(null)
   const isSubmitDisabled = !newOrderContent || !selectedTableId
   const onAddOrder = () => {
     if (isSubmitDisabled) return
     onSubmit({ content: newOrderContent, table_id: selectedTableId })
+    onClose()
     setNewOrderContent('')
   }
 
   return (
-    <>
+    <Modal
+      title="Add new order" 
+      visible={visible} 
+      onCancel={onClose}
+      footer={[
+        <Button 
+          type="button" 
+          disabled={isSubmitDisabled} 
+          onClick={onAddOrder}
+        >
+          Add order
+        </Button>,
+        <Button type="button" onClick={onClose}>
+          Close
+        </Button>,
+      ]}
+    >
       <Row>
         <Col span={24}> 
           <textarea 
             value={newOrderContent} 
+            style={{ width: '100%' }}
             onChange={(event) => setNewOrderContent(event.target.value)} 
           />
         </Col>
       </Row>
       <Row>
-        <Col span={12}>
+        <Col span={24}>
           <Select
             showSearch
             style={{ width: '100%' }}
@@ -38,16 +56,7 @@ export const NewOrderForm = ({ tables, onSubmit }) => {
             ))}
           </Select>
         </Col>
-        <Col span={12}>
-          <Button 
-            type="button" 
-            disabled={isSubmitDisabled} 
-            onClick={onAddOrder}
-          >
-            Add order
-          </Button>
-        </Col>
       </Row>
-    </>
+    </Modal>
   )
 }

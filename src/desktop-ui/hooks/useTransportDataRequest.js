@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
+const DEFAULT_DATA = []
+
 export const useTransportDataRequest = ({
   dataRequest,
   dataReply,
@@ -7,8 +9,9 @@ export const useTransportDataRequest = ({
   deleteReply,
   addRequest,
   addReply,
+  defaultData = DEFAULT_DATA,
 }) => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState(defaultData)
   const [isLoading, setIsLoading] = useState(false)
   const requestData = useCallback(() => {
     window.ipcRenderer.send(dataRequest)

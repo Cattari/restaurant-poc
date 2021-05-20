@@ -1,4 +1,5 @@
 export { CopyToClipboardButton } from './CopyToClipboardButton.jsx'
 export { TableListItem } from './TableListItem.jsx'
-export { NewOrderForm } from './NewOrderForm.jsx'
+export { NewOrderModal } from './NewOrderModal.jsx'
 export { OrderListItem } from './OrderListItem.jsx'
+export { NewTableModal } from './NewTableModal.jsx'
